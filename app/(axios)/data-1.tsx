@@ -1,3 +1,4 @@
+import { IconSymbol } from "@/components/ui/IconSymbol";
 import axios from "axios";
 import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
@@ -32,7 +33,7 @@ export default function Data1Screen() {
       setData(
         (
           await axios.get(
-            "https://686d0a2314219674dcca2eca.mockapi.io/api/v1/user"
+            "https://6874ee13dd06792b9c95e743.mockapi.io/api/v1/books"
           )
         )?.data
       );
@@ -41,8 +42,20 @@ export default function Data1Screen() {
     }
   };
 
+  const newBook = () => {
+    navigation.navigate("data-2", { mode: "add" });
+  };
+
   const openBookDetail = (book: any) => {
-    navigation.navigate("data-2", { book });
+    navigation.navigate("data-2", { book, mode: "view" });
+  };
+
+  const openBookEdit = (book: any) => {
+    navigation.navigate("data-2", { book, mode: "edit" });
+  };
+
+  const deleteBook = (book: any) => {
+    console.log("delete book");
   };
 
   useEffect(() => {
@@ -63,13 +76,27 @@ export default function Data1Screen() {
               style={styles.image}
               resizeMode="cover"
             />
-            <View style={styles.content}>
+            <View style={[styles.content, styles.fixedContent]}>
               <Text style={styles.title}>{data.name_book}</Text>
               <Text>{data.name_of_author}</Text>
               <Text style={styles.price}>{data.price_of_book}</Text>
               <Text>{data.description}</Text>
             </View>
-            <View style={styles.content}></View>
+            <View style={styles.flexRow}>
+              <TouchableOpacity
+                style={styles.content}
+                onPress={() => openBookEdit(data)}
+              >
+                <IconSymbol size={28} name="pencil" color={"#0f4f8b"} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.content}
+                onPress={() => deleteBook(data)}
+                activeOpacity={0.6}
+              >
+                <IconSymbol size={28} name="trash" color={"red"} />
+              </TouchableOpacity>
+            </View>
           </View>
         </TouchableOpacity>
       </>
@@ -87,6 +114,9 @@ export default function Data1Screen() {
           contentContainerStyle={styles.list}
         />
       </View>
+      <TouchableOpacity style={styles.floatingBtn} onPress={() => newBook()}>
+        <IconSymbol size={42} name="plus" color={"blue"} />
+      </TouchableOpacity>
     </>
   );
 }
@@ -118,9 +148,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     minHeight: 250,
+    justifyContent: "space-around",
   },
   content: {
     maxWidth: cardWidth / 1.9,
+  },
+  fixedContent: {
+    width: cardWidth / 2.2,
   },
   flexRow: {
     display: "flex",
@@ -135,5 +169,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 500,
     color: "#0f4f8b",
+  },
+  floatingBtn: {
+    position: "fixed",
+    right: 50,
+    bottom: 78,
+    backgroundColor: '#eeede7',
+    borderRadius: 100,
+    width: 60,
+    height: 60,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });

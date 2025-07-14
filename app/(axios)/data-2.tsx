@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
+import axios from "axios";
 import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -23,21 +24,63 @@ export interface BookItemProps {
 
 export default function Data2Screen({ route }: any) {
   const navigation = useNavigation<any>();
-  const { book }: { book: BookItemProps } = route?.params || {};
-  
-  const [data, setData] = useState([]);
+  const { book, mode }: { book: BookItemProps; mode: string } =
+    route?.params || {};
 
-  const save = () => {
-    console.log("save data");
+  const [name, setName] = useState(book?.name_book || "");
+  const [cover, setCover] = useState(book?.cover?.toString() || "");
+  const [author, setAuthor] = useState(book?.name_of_author || "");
+  const [description, setDescription] = useState(book?.description || "");
+
+  const save = async () => {
     console.log(book);
-    navigation.goBack()
+
+    try {
+      if (mode === "add") {
+        const body = {
+          name_book: name,
+          cover,
+          name_of_author: author,
+          description,
+        };
+        const res = (
+          await axios.post(
+            "https://6874ee13dd06792b9c95e743.mockapi.io/api/v1/books",
+            body
+          )
+        )?.data;
+        console.log(res);
+      } else if (mode === "edit") {
+        const body = {
+          name_book: name,
+          cover,
+          name_of_author: author,
+          description,
+        };
+        const res = (
+          await axios.put(
+            "https://6874ee13dd06792b9c95e743.mockapi.io/api/v1/books/" + book.id, body
+          )
+        )?.data;
+        console.log(res);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    navigation.goBack();
   };
 
   useEffect(() => {
-    if (typeof book != 'object') {
-      navigation.navigate("data-1")
+    if (book != null && book !== undefined && typeof book != "object") {
+      navigation.navigate("data-1");
     }
-  }, [])
+
+    setName(book?.name_book || "");
+    setCover(book?.cover?.toString() || "");
+    setAuthor(book?.name_of_author || "");
+    setDescription(book?.description || "");
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -47,36 +90,42 @@ export default function Data2Screen({ route }: any) {
           customStyle={styles.inputCustom}
           inputAccessoryViewID="bookName"
           placeHolder="Name"
-          value={book.name_book}
-          canEdit={false}
+          value={name}
+          setText={setName}
+          canEdit={mode !== "view"}
         ></Input>
         <Input
           customStyle={styles.inputCustom}
           inputAccessoryViewID="imgUrl"
           placeHolder="Image URL"
-          value={book.cover?.toString()}
-          canEdit={false}
+          value={cover}
+          setText={setCover}
+          canEdit={mode !== "view"}
         ></Input>
         <Input
           customStyle={styles.inputCustom}
           inputAccessoryViewID="author"
           placeHolder="Author"
-          value={book.name_of_author}
-          canEdit={false}
+          value={author}
+          setText={setAuthor}
+          canEdit={mode !== "view"}
         ></Input>
         <Input
           customStyle={styles.inputCustom}
           inputAccessoryViewID="description"
           placeHolder="Description"
-          value={book.description}
-          canEdit={false}
+          value={description}
+          setText={setDescription}
+          canEdit={mode !== "view"}
         ></Input>
-        <Button
-          buttonTextStyle={styles.btnTextSave}
-          customStyle={styles.btnSave}
-          onPress={save}
-          label="Save"
-        ></Button>
+        {mode !== "view" && (
+          <Button
+            buttonTextStyle={styles.btnTextSave}
+            customStyle={styles.btnSave}
+            onPress={save}
+            label="Save"
+          ></Button>
+        )}
       </View>
     </View>
   );
@@ -138,14 +187,14 @@ const styles = StyleSheet.create({
     height: 32,
   },
   btnSave: {
-    width: '100%',
+    width: "100%",
     height: 32,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: '#258eeb'
+    backgroundColor: "#258eeb",
   },
   btnTextSave: {
     fontWeight: 500,
-    color: 'white'
+    color: "white",
   },
 });
