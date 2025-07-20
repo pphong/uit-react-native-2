@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { StyleSheet, TextInput } from "react-native";
 
 type InputProps = {
@@ -20,21 +19,20 @@ const Input: React.FC<InputProps> = ({
   customStyle,
   canEdit,
 }) => {
-  const [editable, setEditable] = useState(canEdit);
 
   return (
     <TextInput
       style={[
         styles.textInput,
         customStyle,
-        !editable && { backgroundColor: "#dbdbdb" },
+        !canEdit && { backgroundColor: "#dbdbdb" },
       ]}
       inputAccessoryViewID={inputAccessoryViewID}
       onChangeText={setText}
       value={value ?? ""}
       placeholder={placeHolder}
       secureTextEntry={secureTextEntry}
-      editable={editable}
+      editable={canEdit}
     />
   );
 };

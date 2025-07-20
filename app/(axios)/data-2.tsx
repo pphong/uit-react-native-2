@@ -59,7 +59,9 @@ export default function Data2Screen({ route }: any) {
         };
         const res = (
           await axios.put(
-            "https://6874ee13dd06792b9c95e743.mockapi.io/api/v1/books/" + book.id, body
+            "https://6874ee13dd06792b9c95e743.mockapi.io/api/v1/books/" +
+              book.id,
+            body
           )
         )?.data;
         console.log(res);
@@ -67,28 +69,21 @@ export default function Data2Screen({ route }: any) {
     } catch (error) {
       console.error(error);
     }
-    
+
     // clear()
     navigation.navigate("data-1");
   };
 
   useEffect(() => {
-    if (book != null && book !== undefined && typeof book != "object") {
-      navigation.navigate("data-1");
-    }
 
     setName(book?.name_book || "");
     setCover(book?.cover?.toString() || "");
     setAuthor(book?.name_of_author || "");
     setDescription(book?.description || "");
-  }, []);
 
-  const clear = () => {
-    setAuthor('');
-    setCover('');
-    setDescription('');
-    setName('')
-  }
+    console.log(mode);
+    
+  }, [book]);
 
   return (
     <View style={styles.container}>

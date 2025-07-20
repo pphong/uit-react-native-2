@@ -82,7 +82,6 @@ export default function Data1Screen() {
     return (
       <>
         <TouchableOpacity
-          style={styles.card}
           onPress={() => openBookDetail(data)}
         >
           <View style={[styles.card, styles.flexRow]}>
