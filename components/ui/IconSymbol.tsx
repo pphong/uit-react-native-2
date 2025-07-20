@@ -26,6 +26,13 @@ const MAPPING = {
   "paperplane.fill": "send",
   "chevron.left.forwardslash.chevron.right": "code",
   "chevron.right": "chevron-right",
+  'd.square': 'account-box',
+  'e.square': 'rocket-launch',
+  'arrow.backward': 'arrow-back-ios',
+  'arrow.forward': 'arrow-forward-ios',
+  'apple.logo': 'apple',
+  'cart.badge.plus': 'shopping-cart',
+  'arrow.backward.to.line':'keyboard-arrow-right'
 } as IconMapping;
 
 const MAPPING_2 = {
