@@ -1,7 +1,8 @@
 import { IconSymbol } from "@/components/ui/IconSymbol";
+import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import { useNavigation } from "expo-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -54,13 +55,27 @@ export default function Data1Screen() {
     navigation.navigate("data-2", { book, mode: "edit" });
   };
 
-  const deleteBook = (book: any) => {
+  const deleteBook = async (book: any) => {
     console.log("delete book");
+    try {
+      await axios.delete(
+        "https://6874ee13dd06792b9c95e743.mockapi.io/api/v1/books/" + book.id
+      );
+      getData();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
     getData();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getData();
+    }, [])
+  );
 
   const renderItem = ({ item }: any) => {
     const data: BookItemProps = item;
@@ -174,12 +189,12 @@ const styles = StyleSheet.create({
     position: "fixed",
     right: 50,
     bottom: 78,
-    backgroundColor: '#eeede7',
+    backgroundColor: "#eeede7",
     borderRadius: 100,
     width: 60,
     height: 60,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -67,8 +67,9 @@ export default function Data2Screen({ route }: any) {
     } catch (error) {
       console.error(error);
     }
-
-    navigation.goBack();
+    
+    // clear()
+    navigation.navigate("data-1");
   };
 
   useEffect(() => {
@@ -81,6 +82,13 @@ export default function Data2Screen({ route }: any) {
     setAuthor(book?.name_of_author || "");
     setDescription(book?.description || "");
   }, []);
+
+  const clear = () => {
+    setAuthor('');
+    setCover('');
+    setDescription('');
+    setName('')
+  }
 
   return (
     <View style={styles.container}>
